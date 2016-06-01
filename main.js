@@ -38,7 +38,7 @@ $(document).ready(function(){
 
     cocktailShakerShort(data, predicate);
 
-    var $html;
+    var $html = '';
 
     $('.container').empty();
 
