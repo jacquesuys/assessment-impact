@@ -1,5 +1,4 @@
 $(document).ready(function(){
-  var $html;
 
   // pseudo taken from wikipedia: https://en.wikipedia.org/wiki/Cocktail_shaker_sort
   var swapped, current, next;
@@ -35,9 +34,30 @@ $(document).ready(function(){
     while(swapped);
   }
 
-  cocktailShakerShort(data, "last_name");
+  var listItems = function(predicate) {
 
-  $.each(data, function(i){
-    console.log(data[i]);
+    cocktailShakerShort(data, predicate);
+
+    var $html;
+
+    $('.container').empty();
+
+    $.each(data, function(i) {
+      $html += '<div class="item" data-id="' + data[i]["id"] + '">';
+        $html += '<div>' + data[i]["last_name"] + ', ' + data[i]["first_name"] + '</div>';
+        $html += '<div>' + data[i]["gender"] + ', <a href="mailto:' + data[i]["email"] + '">' + data[i]["email"] + '</a></div>';
+      $html += '</div>';
+    });
+
+    $('.container').html($html);
+
+    console.log(data);
+  }
+
+  listItems("last_name");
+
+  $(".sort").change(function() {
+    var pred = $(this).val();
+    listItems( pred );
   });
 });
