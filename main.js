@@ -34,24 +34,25 @@ $(document).ready(function(){
     while(swapped);
   }
 
-  var listItems = function(predicate) {
-
+  var listItems = function(predicate, page) {
     cocktailShakerShort(data, predicate);
 
-    var $html = '';
+    page = page || 0;
+    list = data.slice(page * 25, page * 25 + 26);
 
+    var $html = '';
     $('.container').empty();
 
-    $.each(data, function(i) {
-      $html += '<div class="item" data-id="' + data[i]["id"] + '">';
-        $html += '<div>' + data[i]["last_name"] + ', ' + data[i]["first_name"] + '</div>';
-        $html += '<div>' + data[i]["gender"] + ', <a href="mailto:' + data[i]["email"] + '">' + data[i]["email"] + '</a></div>';
+    for (var i = 0; i < list.length; i++) {
+      $html += '<div class="item" data-id="' + list[i]["id"] + '">';
+        $html += '<div>' + list[i]["last_name"] + ', ' + list[i]["first_name"] + '</div>';
+        $html += '<div>' + list[i]["gender"] + ', <a href="mailto:' + list[i]["email"] + '">' + list[i]["email"] + '</a></div>';
       $html += '</div>';
-    });
+    }
 
     $('.container').html($html);
 
-    console.log(data);
+    console.log(list);
   }
 
   listItems("last_name");
@@ -60,4 +61,16 @@ $(document).ready(function(){
     var pred = $(this).val();
     listItems( pred );
   });
+
+  var counter = 0;
+  var pred = $('.sort').val();
+
+  $('#next').on('click', function(){
+    listItems(pred, Math.min(++counter, data.length / 25));
+  });
+
+  $('#prev').on('click', function(){
+    listItems(pred, Math.max(--counter, 0));
+  });
+
 });
