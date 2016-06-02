@@ -16,10 +16,13 @@ $(document).ready(function(){
           swapped = true;
         }
       }
+
       if (!swapped) {
         break;
       }
+
       swapped = false;
+
       for (var i = 0; i < arr.length - 1; i++) {
         current = arr[i][predicate];
         next = arr[i + 1][predicate];
@@ -35,10 +38,15 @@ $(document).ready(function(){
   }
 
   var listItems = function(predicate, page) {
-    cocktailShakerShort(data, predicate);
 
     page = page || 0;
-    list = data.slice(page * 25, page * 25 + 26);
+
+    if (!page) {
+      cocktailShakerShort(data, predicate);
+    }
+
+    // TODO: need to look at indexing only displaying 481 results
+    list = data.slice(page * 26, (page * 26) + 25);
 
     var $html = '';
     $('.container').empty();
@@ -52,7 +60,7 @@ $(document).ready(function(){
 
     $('.container').html($html);
 
-    console.log(list);
+    console.log(list.length);
   }
 
   listItems("last_name");
@@ -71,6 +79,25 @@ $(document).ready(function(){
 
   $('#prev').on('click', function(){
     listItems(pred, Math.max(--counter, 0));
+  });
+
+  $('.search').on('keyup', function(){
+    var $val = $(this).val();
+    var i = 0;
+    var key, str, regex, result;
+    if ($val.length > 3) {
+      for (i; i < data.length; i++) {
+        for (key in data[i]) {
+          str = data[i][key];
+          regex = new RegExp($val, 'gi');
+          result = regex.test(str);
+          if (result) {
+            // implement an indexof search and store the results into a new array
+            console.log(data[i]); // true
+          }
+        }
+      }
+    }
   });
 
 });
