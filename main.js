@@ -45,7 +45,6 @@ $(document).ready(function(){
       cocktailShakerShort(data, predicate);
     }
 
-    // TODO: need to look at indexing only displaying 481 results
     list = data.slice((page * 25), page * 25 + 25);
 
     var $html = '';
@@ -75,7 +74,7 @@ $(document).ready(function(){
   var pred = $('.sort').val();
 
   $('#next').on('click', function(){
-    listItems(pred, Math.min(++counter, data.length / 25));
+    listItems(pred, Math.min(++counter, data.length / 25 - 1));
   });
 
   $('#prev').on('click', function(){
