@@ -46,7 +46,7 @@ $(document).ready(function(){
     }
 
     // TODO: need to look at indexing only displaying 481 results
-    list = data.slice(page * 26, (page * 26) + 25);
+    list = data.slice((page * 25), page * 25 + 25);
 
     var $html = '';
     $('.container').empty();
@@ -60,6 +60,7 @@ $(document).ready(function(){
 
     $('.container').html($html);
 
+    // console.log(list);
     console.log(list.length);
   }
 
@@ -81,23 +82,47 @@ $(document).ready(function(){
     listItems(pred, Math.max(--counter, 0));
   });
 
+
+  var findID = function(list, key, val) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i][key] === val) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   $('.search').on('keyup', function(){
     var $val = $(this).val();
-    var i = 0;
-    var key, str, regex, result;
-    if ($val.length > 3) {
-      for (i; i < data.length; i++) {
+    var i, key, str, regex, result, $html = '';
+    var search = [];
+
+    $('.results').empty();
+
+    if ($val.length > 2) {
+      for (i = 0; i < data.length; i++) {
         for (key in data[i]) {
           str = data[i][key];
           regex = new RegExp($val, 'gi');
           result = regex.test(str);
-          if (result) {
-            // implement an indexof search and store the results into a new array
-            console.log(data[i]); // true
+          if (result && findID(search, "id", data[i].id)) {
+            search.push(data[i]);
           }
         }
       }
+
+      for (i = 0; i < search.length; i++) {
+        $html += '<li>';
+          $html += '<div>' + search[i]["last_name"] + ', ' + search[i]["first_name"] + '</div>';
+          $html += '<div>' + search[i]["gender"] + ', ' + search[i]["email"] + '</div>';
+        $html += '</li>';
+      }
+
+      $('.results').html($html);
+    } else {
+      $('.results').empty();    
     }
+
   });
 
 });
