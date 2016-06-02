@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
   // pseudo taken from wikipedia: https://en.wikipedia.org/wiki/Cocktail_shaker_sort
-  var swapped, current, next;
-  var cocktailShakerShort = function(arr, predicate) {
+  var cocktailShakerSort = function(arr, predicate) {
+    var swapped, current, next;
     do {
       swapped = false;
 
@@ -41,8 +41,9 @@ $(document).ready(function(){
 
     page = page || 0;
 
+    // don't sort if page is greater than 0
     if (!page) {
-      cocktailShakerShort(data, predicate);
+      cocktailShakerSort(data, predicate);
     }
 
     list = data.slice((page * 25), page * 25 + 25);
@@ -59,14 +60,16 @@ $(document).ready(function(){
 
     $('.container').html($html);
 
-    // console.log(list);
-    console.log(list.length);
+    // TODO: use these log to test the length and the contents of the page listings
+      // console.log(list);
+      // console.log(list.length);
   }
 
   listItems("last_name");
 
   $(".sort").change(function() {
     var pred = $(this).val();
+    counter = 0;
     listItems( pred );
   });
 
@@ -74,21 +77,30 @@ $(document).ready(function(){
   var pred = $('.sort').val();
 
   $('#next').on('click', function(){
-    listItems(pred, Math.min(++counter, data.length / 25 - 1));
+    if (counter < 19) 
+      listItems(pred, Math.min(++counter, data.length / 25 - 1)); 
   });
 
   $('#prev').on('click', function(){
-    listItems(pred, Math.max(--counter, 0));
+    if (counter > 0) 
+      listItems(pred, Math.max(--counter, 0));
   });
 
+  $('body').on('keydown', function(e) {
+    if (e.which === 37 && counter > 0) 
+      listItems(pred, Math.max(--counter, 0));
+      
+    if (e.which === 39 && counter < 19) 
+      listItems(pred, Math.min(++counter, data.length / 25 - 1));
+  });
 
   var findID = function(list, key, val) {
     for (var i = 0; i < list.length; i++) {
       if (list[i][key] === val) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   };
 
   $('.search').on('keyup', function(){
@@ -104,7 +116,8 @@ $(document).ready(function(){
           str = data[i][key];
           regex = new RegExp($val, 'gi');
           result = regex.test(str);
-          if (result && findID(search, "id", data[i].id)) {
+          // if result true and the ID does't exist in search array...
+          if (result && !findID(search, "id", data[i].id)) {
             search.push(data[i]);
           }
         }
