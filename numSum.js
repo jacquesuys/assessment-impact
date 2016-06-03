@@ -24,7 +24,7 @@ var numSummarize = function(str) {
     next = result[i + 1];
 
     if (current + 1 === next) {
-      recurse(i, i);
+      recurse(i, i + 1);
     }
   }
   
